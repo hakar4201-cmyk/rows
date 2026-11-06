@@ -1,120 +1,220 @@
+
 <!DOCTYPE html>
 <html lang="ckb" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>ڕیزەکان</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>دروستکردنی گروپ</title>
 <style>
-:root{--bg:#f3f5f7;--s:#fff;--t:#14202b;--m:#5b6b7a;--l:#d5dde4;--a:#0f6b5c;--at:#fff;--e:#b3261e}
-@media(prefers-color-scheme:dark){:root{--bg:#0e151b;--s:#16212a;--t:#e8eef3;--m:#93a4b3;--l:#2a3a47;--a:#3cc4a8;--at:#06231d;--e:#ff8a80}}
+:root{--bg:#f3f5f7;--s:#fff;--t:#14202b;--m:#64748b;--l:#d5dde4;--a:#0f6b5c;--e:#b3261e}
+@media(prefers-color-scheme:dark){:root{--bg:#0e151b;--s:#16212a;--t:#e8eef3;--m:#93a4b3;--l:#2a3a47;--a:#3cc4a8;--e:#ff8a80}}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--t);font-family:Tahoma,system-ui,sans-serif;line-height:1.4;padding-top:env(safe-area-inset-top,0px)}
-main{max-width:520px;margin:0 auto;padding:10px 10px 28px}
-.c{background:var(--s);border:1px solid var(--l);border-radius:12px;padding:10px;margin-bottom:10px}
-.f{display:flex;align-items:center;gap:8px;margin-bottom:8px;direction:ltr}
-.f b{min-width:1.4rem;text-align:center;font-family:monospace;font-size:1.1rem}
-.f span{font-family:monospace;font-size:.95rem;color:var(--m);white-space:nowrap}
-input{flex:1;min-width:0;direction:ltr;text-align:left;font:inherit;font-family:monospace;font-size:1rem;padding:7px;color:var(--t);background:var(--bg);border:1px solid var(--l);border-radius:8px}
-.err{color:var(--e);font-size:.85rem;min-height:1.2em;direction:rtl}
-.res{min-height:3rem;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:4px 16px;border-radius:10px;font-weight:700;font-size:1.4rem;direction:ltr;text-align:center;word-break:break-all;padding:8px 10px;background:#ffd60a;color:#14202b}
-.res .d{font-weight:400;opacity:.6}
-.res.e{background:none;border:1px dashed var(--l);color:var(--m);font-size:.95rem;font-weight:400;direction:rtl}
-.row{display:flex;gap:8px;margin-bottom:6px}
-button{font:inherit;cursor:pointer;border-radius:8px}
-.rb{flex:1;padding:9px;font-size:1rem;font-weight:700;color:var(--t);background:var(--bg);border:1px solid var(--l)}
-.rb.on{color:var(--at);background:var(--a);border-color:var(--a)}
-.del{padding:0 12px;font-size:.85rem;color:var(--e);background:none;border:1px solid var(--l)}
-.x{padding:4px 10px;color:var(--e);background:none;border:1px solid var(--l);font-size:.9rem}
-.add{display:block;margin:2px auto 0;padding:5px 18px;font-size:.9rem;color:var(--t);background:var(--bg);border:1px solid var(--l)}
-.empty{text-align:center;color:var(--m);padding:10px}
+body{margin:0;background:var(--bg);color:var(--t);font-family:Tahoma,sans-serif}
+main{max-width:520px;margin:auto;padding:12px}
+.c{background:var(--s);border:1px solid var(--l);border-radius:12px;padding:12px;margin-bottom:10px}
+label{display:block;margin-bottom:6px;font-weight:bold}
+textarea{width:100%;font:inherit;padding:10px;border:1px solid var(--l);border-radius:8px;background:var(--bg);color:var(--t);direction:ltr;text-align:left;min-height:85px;resize:vertical}
+button{font:inherit;cursor:pointer;border-radius:8px;border:1px solid var(--l);background:var(--bg);color:var(--t);touch-action:manipulation}
+.main{width:100%;background:var(--a);color:white;border:0;padding:11px;font-weight:bold;margin-top:10px}
+.counter{display:flex;align-items:center;gap:12px;direction:ltr}
+.counter button{width:42px;height:38px;font-size:1.3rem}
+.counter b{min-width:30px;text-align:center;font-size:1.2rem}
+.err{color:var(--e);font-size:.9rem;margin-top:8px}
+.info{display:flex;justify-content:space-between;color:var(--m);font-size:.75rem;margin-top:8px}
+.total{font-size:.8rem;color:var(--m);text-align:center}
+.rows{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:10px}
+.rb{padding:11px 3px;font-size:.9rem;user-select:none;-webkit-user-select:none}
+.rb.on{background:var(--a);color:white;border-color:var(--a)}
+.rb:active{opacity:.7}
+.selected{direction:ltr;text-align:center;font-family:monospace;font-size:1.5rem;font-weight:bold;padding:20px 5px;word-break:break-word}
+.hint{text-align:center;color:var(--m);font-size:.8rem;padding:10px}
+.empty{text-align:center;color:var(--m);padding:15px}
 </style>
 </head>
 <body>
 <main>
+
 <div class="c">
-<div id="groups"></div>
-<button class="add" id="add" type="button">+ گروپی نوێ</button>
-<div class="f" style="margin-top:10px"><span>enumerate(</span><input id="E" value="product(A, B), 1" autocomplete="off"><span>)</span></div>
-<div class="err" id="err"></div>
+<label>ناوی کەسەکان</label>
+<textarea id="names">A,B,C,D,E,F,G,H,I,J,K,L,M,N,O</textarea>
+
+<label style="margin-top:12px">ژمارەی کەسی هەر گروپ</label>
+<div class="counter">
+<button id="minus">−</button>
+<b id="k">3</b>
+<button id="plus">+</button>
 </div>
-<div class="c"><div class="res e" id="res"></div></div>
-<div class="c" id="rows"></div>
+
+<button class="main" id="generate">دروستکردنی گروپەکان</button>
+<div class="err" id="err"></div>
+
+<div class="info">
+<span>کەسان: <b id="people">15</b></span>
+<span>کۆی گروپەکان: <b id="total">0</b></span>
+</div>
+</div>
+
+<div class="c">
+<div class="total">لیستی گروپەکان</div>
+<div class="rows" id="rows"></div>
+<div class="hint">کلیک: بینینی گروپ | دەست ڕاگرتن: سڕینەوە</div>
+</div>
+
+<div class="c">
+<div class="total" id="number">گروپێک هەڵبژێرە</div>
+<div class="selected" id="selected">—</div>
+</div>
+
 </main>
+
 <script>
 const $=id=>document.getElementById(id);
-const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const items=s=>s.split(/[,،]/).map(x=>x.trim()).filter(Boolean);
-let G=[{l:'A',v:'a, b, c'},{l:'B',v:'a1, b1, c1'}],rows=[],sel=null;
-function parseExpr(t){
-const m=t.match(/^\s*product\(\s*([A-Za-z_]\w*(?:\s*,\s*[A-Za-z_]\w*)*)\s*\)\s*,\s*(-?\d+)\s*$/);
-if(!m)throw new Error('شێوازی کۆدەکە هەڵەیە. نموونە: product(A, B), 1');
-return {names:m[1].split(/\s*,\s*/),start:parseInt(m[2],10)};
+
+let k=3;
+let result=[];
+let selected=null;
+let pressTimer=null;
+let longPress=false;
+let pointerStart=null;
+
+function generate(){
+const n=$('names').value.split(/[,،\n]/).map(x=>x.trim()).filter(Boolean);
+
+$('err').textContent='';
+
+if(new Set(n).size!==n.length){
+$('err').textContent='ناوی دووبارە هەیە.';
+return;
 }
-function gen(groups,expr){
-const lists={};
-groups.forEach(g=>lists[g.l]=items(g.v));
-const {names,start}=parseExpr(expr);
-let size=1;
-for(const n of names){
-if(!lists[n])throw new Error('گروپی '+n+' نییە.');
-size*=lists[n].length;
+
+if(k<2||k>n.length){
+$('err').textContent='ژمارەی کەسی گروپ هەڵەیە.';
+return;
 }
-if(size>5000)throw new Error('ڕیزەکان زۆرن (زیاتر لە ٥٠٠٠).');
-let prod=[[]];
-for(const n of names){
-const nx=[];
-for(const p of prod)for(const v of lists[n])nx.push([...p,v]);
-prod=nx;
+
+result=[];
+selected=null;
+
+let combinations=[];
+
+function make(start,group){
+if(group.length===k){
+combinations.push([...group]);
+return;
 }
-return prod.map((p,k)=>({n:start+k,parts:p}));
+for(let i=start;i<n.length;i++){
+group.push(n[i]);
+make(i+1,group);
+group.pop();
 }
-function build(){
-$('err').textContent='';sel=null;rows=[];
-try{rows=gen(G,$('E').value)}catch(e){$('err').textContent=e.message}
-render();
 }
-function renderGroups(){
-$('groups').innerHTML=G.map((g,i)=>'<div class="f"><b>'+g.l+'</b><span>=</span><input data-g="'+i+'" value="'+esc(g.v)+'" autocomplete="off">'+(i>1?'<button class="x" data-x="'+i+'" type="button">✕</button>':'')+'</div>').join('');
+
+make(0,[]);
+
+for(let i=combinations.length-1;i>0;i--){
+let j=Math.floor(Math.random()*(i+1));
+[combinations[i],combinations[j]]=
+[combinations[j],combinations[i]];
 }
-function render(){
-const r=$('res'),cur=rows.find(x=>x.n===sel);
-if(cur){r.className='res';r.innerHTML=cur.parts.map((p,i)=>(i?'<span class="d">-</span>':'')+'<span>'+esc(p)+'</span>').join('')}
-else{r.className='res e';r.textContent='دوگمەی ڕیزێک دابگرە بۆ بینینی ئەنجامەکەی'}
-$('rows').innerHTML=rows.length?rows.map(x=>'<div class="row"><button class="rb'+(x.n===sel?' on':'')+'" data-n="'+x.n+'">ڕیزی '+x.n+'</button><button class="del" data-d="'+x.n+'">سڕینەوە</button></div>').join(''):'<div class="empty">هیچ ڕیزێک نییە</div>';
+
+for(let g of combinations){
+if(result.every(x=>
+x.filter(v=>g.includes(v)).length<=1
+)){
+result.push(g);
 }
-function setExpr(fn){
-try{
-const p=parseExpr($('E').value);
-p.names=fn(p.names);
-$('E').value='product('+p.names.join(', ')+'), '+p.start;
-}catch(e){}
 }
+
+$('people').textContent=n.length;
+renderRows();
+showSelected();
+}
+
+function renderRows(){
+$('total').textContent=result.length;
+
+$('rows').innerHTML=result.length?
+result.map((g,i)=>
+`<button class="rb ${selected===i?'on':''}" data-i="${i}">${i+1}</button>`
+).join('')
+:'<div class="empty">هیچ گروپێک نییە</div>';
+}
+
+function showSelected(){
+if(selected===null||!result[selected]){
+$('number').textContent='گروپێک هەڵبژێرە';
+$('selected').textContent='—';
+return;
+}
+
+$('number').textContent='گروپی ژمارە '+(selected+1);
+$('selected').textContent='('+result[selected].join(', ')+')';
+}
+
+function deleteGroup(i){
+if(!result[i])return;
+
+if(!confirm('ئایا دڵنیایت لە سڕینەوەی گروپی '+(i+1)+'؟')){
+return;
+}
+
+result.splice(i,1);
+selected=null;
+renderRows();
+showSelected();
+}
+
+$('rows').onpointerdown=e=>{
+const b=e.target.closest('.rb');
+if(!b)return;
+
+longPress=false;
+pointerStart=b;
+const i=Number(b.dataset.i);
+
+pressTimer=setTimeout(()=>{
+longPress=true;
+deleteGroup(i);
+},700);
+};
+
+function cancelPress(){
+clearTimeout(pressTimer);
+}
+
+$('rows').onpointerup=cancelPress;
+$('rows').onpointerleave=cancelPress;
+$('rows').onpointercancel=cancelPress;
+
 $('rows').onclick=e=>{
-const b=e.target.closest('button');if(!b)return;
-if(b.dataset.n!==undefined){sel=+b.dataset.n}
-else if(b.dataset.d!==undefined){const n=+b.dataset.d;rows=rows.filter(x=>x.n!==n);if(sel===n)sel=null}
-render();
+const b=e.target.closest('.rb');
+if(!b)return;
+
+if(longPress){
+longPress=false;
+return;
+}
+
+selected=Number(b.dataset.i);
+renderRows();
+showSelected();
 };
-$('groups').oninput=e=>{
-const i=e.target.dataset.g;if(i===undefined)return;
-G[+i].v=e.target.value;build();
+
+$('minus').onclick=()=>{
+if(k>2){
+k--;
+$('k').textContent=k;
+}
 };
-$('groups').onclick=e=>{
-const b=e.target.closest('button');if(!b||b.dataset.x===undefined)return;
-const g=G.splice(+b.dataset.x,1)[0];
-setExpr(n=>n.filter(x=>x!==g.l));
-renderGroups();build();
+
+$('plus').onclick=()=>{
+k++;
+$('k').textContent=k;
 };
-$('add').onclick=()=>{
-if(G.length>=8)return;
-const l='ABCDEFGH'.split('').find(c=>!G.some(g=>g.l===c));
-const k=l.toLowerCase();
-G.push({l,v:k+'1, '+k+'2, '+k+'3'});
-setExpr(n=>[...n,l]);
-renderGroups();build();
-};
-$('E').oninput=build;
-renderGroups();build();
+
+$('generate').onclick=generate;
+
+generate();
 </script>
 </body>
 </html>
